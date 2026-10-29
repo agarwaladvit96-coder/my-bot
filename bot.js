@@ -1,30 +1,28 @@
 const mineflayer = require('mineflayer')
+const viaproxy = require('mineflayer-viaproxy') // Installs the translation module
 const http = require('http')
 
-// 1. FREE TIER WORKAROUND: Create a fake webpage server
-// This stops Render from spinning down your free service.
+// Web server utility to keep Render free tier alive
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' })
   res.end('Minecraft Keeper Bot is Online!')
 })
-
-// Render automatically assigns a port via process.env.PORT
 const PORT = process.env.PORT || 3000
-server.listen(PORT, () => {
-  console.log(`Web server listening on port ${PORT} to keep free tier alive.`)
-})
+server.listen(PORT)
 
-// 2. YOUR MINECRAFT BOT LOGIC
 function createBot() {
   const bot = mineflayer.createBot({
-    host: 'kongoni.aternos.host', // Your Aternos DynIP
-    port: 55545,                              // Your Aternos Port
+    host: 'ox.aternos.org', // Use your current Aternos DynIP
+    port: 55545,                              // Use your current Aternos Port
     username: 'AternosKeeper',
-    version: false
+    version: '26.1'                           // Run bot stable protocol locally
   })
 
+  // Load the translator extension to bridge from 26.1 over to the 26.3 server
+  bot.loadPlugin(viaproxy) 
+
   bot.on('spawn', () => {
-    console.log('Bot successfully connected to Aternos!')
+    console.log('Bot successfully connected to Aternos 26.3!')
     startAntiAFK(bot)
   })
 
