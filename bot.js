@@ -17,10 +17,10 @@ server.listen(PORT, () => {
 // 2. YOUR MINECRAFT BOT LOGIC
 function createBot() {
   const bot = mineflayer.createBot({
-    host: 'lungfish.aternos.host', // Your Aternos DynIP
+    host: 'kongoni.aternos.host', // Your Aternos DynIP
     port: 55545,                              // Your Aternos Port
     username: 'AternosKeeper',
-    version: '26.3'
+    version: false
   })
 
   bot.on('spawn', () => {
