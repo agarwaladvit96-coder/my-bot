@@ -1,37 +1,51 @@
 const mineflayer = require('mineflayer')
-const viaproxy = require('mineflayer-viaproxy') // Installs the translation module
+const { Proxy } = require('prismarine-proxy')
 const http = require('http')
 
-// Web server utility to keep Render free tier alive
+const TARGET_HOST = 'brill.aternos.org' // Put your Aternos DynIP here
+const TARGET_PORT = 55545                           // Put your Aternos Port here
+const LOCAL_PROXY_PORT = 25565
+
+// 1. Web server utility to keep Render free tier alive
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' })
-  res.end('Minecraft Keeper Bot is Online!')
+  res.end('Minecraft Keeper Bot Proxy Online!')
 })
-const PORT = process.env.PORT || 3000
-server.listen(PORT)
+server.listen(process.env.PORT || 3000)
 
-function createBot() {
+// 2. Start the Protocol Translator
+const proxy = new Proxy({
+  host: TARGET_HOST,
+  port: TARGET_PORT,
+  version: '1.21.3', // Forces the connection out to 26.3 network data
+  customPackets: true
+})
+
+proxy.on('listening', () => {
+  console.log('Protocol translator running. Deploying bot player...')
+  startBotInstance()
+})
+
+// 3. Connect the Mineflayer Bot
+function startBotInstance() {
   const bot = mineflayer.createBot({
-    host: 'ox.aternos.org', // Use your current Aternos DynIP
-    port: 55545,                              // Use your current Aternos Port
+    host: '127.0.0.1',
+    port: LOCAL_PROXY_PORT,
     username: 'AternosKeeper',
-    version: '26.1'                           // Run bot stable protocol locally
+    version: '1.21' // The stable engine your bot uses locally
   })
 
-  // Load the translator extension to bridge from 26.1 over to the 26.3 server
-  bot.loadPlugin(viaproxy) 
-
   bot.on('spawn', () => {
-    console.log('Bot successfully connected to Aternos 26.3!')
+    console.log('Bot successfully connected to Aternos via proxy!')
     startAntiAFK(bot)
   })
 
   bot.on('end', () => {
-    console.log('Disconnected. Reconnecting in 30 seconds...')
-    setTimeout(createBot, 30000)
+    console.log('Disconnected. Attempting reconnect sequence...')
+    setTimeout(startBotInstance, 30000)
   })
 
-  bot.on('error', (err) => console.log('Error:', err))
+  bot.on('error', (err) => console.log('Bot Network Notice:', err.message))
 }
 
 function startAntiAFK(bot) {
@@ -48,5 +62,3 @@ function startAntiAFK(bot) {
     moveToggle = !moveToggle
   }, 5000)
 }
-
-createBot()
