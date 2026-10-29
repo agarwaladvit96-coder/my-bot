@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer')
 const PrismarineProxy = require('prismarine-proxy').InstantConnectProxy
 const http = require('http')
 
-const TARGET_HOST = 'bream.aternos.host' // Put your Aternos DynIP here
+const TARGET_HOST = 'devario.aternos.host' // Put your Aternos DynIP here
 const TARGET_PORT = 55545                              // Put your Aternos Port here
 const LOCAL_PROXY_PORT = 25565
 
