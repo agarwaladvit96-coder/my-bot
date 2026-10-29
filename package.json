@@ -1,1 +1,13 @@
-"dependencies": {"mineflayer": "^4.20.0"}
+{
+  "name": "aternos-keeper-bot",
+  "version": "1.0.0",
+  "description": "Free cloud bot to keep Aternos server alive",
+  "main": "bot.js",
+  "dependencies": {
+    "mineflayer": "^4.20.0"
+  },
+  "scripts": {
+    "start": "node bot.js"
+  }
+}
+
