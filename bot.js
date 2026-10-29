@@ -20,7 +20,7 @@ function createBot() {
     host: 'lungfish.aternos.host', // Your Aternos DynIP
     port: 55545,                              // Your Aternos Port
     username: 'AternosKeeper',
-    version: '1.21'
+    version: '26.3'
   })
 
   bot.on('spawn', () => {
